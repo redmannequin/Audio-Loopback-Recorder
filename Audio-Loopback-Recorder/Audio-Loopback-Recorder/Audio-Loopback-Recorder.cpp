@@ -30,6 +30,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	BYTE *pData;
 	DWORD flags;
 
+
+
 	hr = CoInitialize(NULL);
 	if (FAILED(hr)) {
 		printf("0");
@@ -42,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		return hr;
 	}
 
-	hr = pEnumerator->GetDefaultAudioEndpoint(eCapture, eConsole, &pDevice);
+	hr = pEnumerator->GetDefaultAudioEndpoint(eCapture, eMultimedia, &pDevice);
 	if (FAILED(hr)) {
 		printf("2");
 		return hr;
@@ -116,6 +118,12 @@ int _tmain(int argc, _TCHAR* argv[]) {
 			if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
 				pData = NULL;  // Tell CopyData to write silence.
 			}
+
+			for (int i = 0; i < 10; ++i) {
+				int p = (int)pData[i];
+				printf("%d ", p);
+			}
+			printf("\n");
 
 			// Copy the available capture data to the audio sink.
 			//hr = pMySink->CopyData(pData, numFramesAvailable, &bDone);
