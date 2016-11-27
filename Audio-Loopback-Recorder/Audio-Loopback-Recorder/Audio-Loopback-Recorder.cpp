@@ -44,7 +44,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		return hr;
 	}
 
-	hr = pEnumerator->GetDefaultAudioEndpoint(eCapture, eMultimedia, &pDevice);
+	// get default output audio endpoint
+	hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &pDevice);
 	if (FAILED(hr)) {
 		printf("2");
 		return hr;
@@ -64,7 +65,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		return hr;
 	}
 
-	hr = pAudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pwfx, NULL);
+	hr = pAudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_LOOPBACK, hnsRequestedDuration, 0, pwfx, NULL);
 	if (FAILED(hr)) {
 		printf("5");
 		return hr;
@@ -101,12 +102,14 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		// Sleep for half the buffer duration.
 		Sleep(hnsActualDuration / REFTIMES_PER_MILLISEC / 2);
 
+		printf("waiting for event\n");
 		hr = pCaptureClient->GetNextPacketSize(&packetLength);
 		if (FAILED(hr)) {
 			printf("9");
 			return hr;
 		}
 
+		printf("reading data\n");
 		while (packetLength != 0) {
 			// Get the available data in the shared buffer.
 			hr = pCaptureClient->GetBuffer(&pData, &numFramesAvailable, &flags, NULL, NULL);
@@ -121,7 +124,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 			for (int i = 0; i < 10; ++i) {
 				int p = (int)pData[i];
-				printf("%d ", p);
+				printf("%d", p);
 			}
 			printf("\n");
 
