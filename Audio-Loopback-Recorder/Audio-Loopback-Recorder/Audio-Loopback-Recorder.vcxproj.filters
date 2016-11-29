@@ -24,8 +24,8 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Buffer2File.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="AudioCapture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="Audio-Loopback-Recorder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer2File.cpp">
+    <ClCompile Include="AudioCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
