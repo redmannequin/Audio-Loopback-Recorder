@@ -5,12 +5,17 @@
 #include <string>
 #include <iostream>
 
+bool checkPath(std::string) {
+	return true;
+}
+
 int _tmain(int argc, _TCHAR* argv[]) {
 	HRESULT hr;
 	AudioCapture capture;
 	hr = capture.init();
 	if (hr != S_OK) return 0;
 
+	std::string input = "";
 	std::string temp = "";
 	temp += "                    _ _                 \n";
 	temp += "     /\\            | (_)                \n";
@@ -27,18 +32,48 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	temp += "             |_|     \n";
 	temp += "----------------------------------------";
 	
-	
-	std::cout << temp << std::endl;
-	do {
-		std::cout << "Do you want to start recording <y/n>: ";
-		std::cin >> temp;
-	} while (temp != "y");
-	capture.start();
-	do {
-		std::cout << "Do you want to stop recording <y/n>: ";
-		std::cin >> temp;
-	} while (temp != "y");
-	capture.stop();
+	while (true) {
+		do {
+			system("cls");
+			std::cout << temp << std::endl;
+			std::cout << "Choose an option: " << std::endl;
+			std::cout << "(1) Enter output path" << std::endl;
+			std::cout << "(2) Exit" << std::endl;
+			std::cout << "Enter choice: ";
+			std::cin >> input;
+		} while (input != "1" && input != "2");
+
+		if (input == "2") return 0;
+
+		do {
+			system("cls");
+			std::cout << temp << std::endl;
+			std::cout << "Enter path: ";
+			std::cin >> input;
+		} while (!checkPath(input));
+
+		do {
+			system("cls");
+			std::cout << temp << std::endl;
+			std::cout << "Choose an option: " << std::endl;
+			std::cout << "(1) Start Recording" << std::endl;
+			std::cout << "(2) Exit" << std::endl;
+			std::cout << "Enter choice: ";
+			std::cin >> input;
+		} while (input != "1" && input != "2");
+
+		if (input == "2") return 0;
+
+		capture.start();
+		do {
+			system("cls");
+			std::cout << temp << std::endl;
+			std::cout << "Do you want to stop recording <y/n>: ";
+			std::cin >> input;
+		} while (input != "y");
+		capture.stop();
+
+	}
 	return 0;
 }
 
