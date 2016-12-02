@@ -3,6 +3,7 @@
 
 #include <Audioclient.h>
 #include <mmdeviceapi.h>
+#include "WavWriter.h"
 
 #define REFTIMES_PER_SEC  10000000
 #define REFTIMES_PER_MILLISEC  10000
@@ -16,6 +17,7 @@ class AudioCapture{
 		HRESULT init();
 		HRESULT start();
 		HRESULT stop();
+		void setPath(std::string path);
 
 	private:
 		HRESULT hr;
@@ -32,6 +34,8 @@ class AudioCapture{
 		BOOL bDone;
 		BYTE *pData;
 		DWORD flags;
+		WavWriter *wav_file;
+		std::string path;
 
 		const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
 		const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "AudioCapture.h"
 
+#include <iostream>
+
 /*  name: AudioCapture constructor 
  *  purpose: set vars
  */
@@ -32,53 +34,55 @@ AudioCapture::~AudioCapture() {
 HRESULT AudioCapture::init() {
 	hr = CoInitialize(NULL);
 	if (FAILED(hr)) {
-		printf("Faild to CoInitialize\n");
+		std::cout << "Faild to CoInitialize\n";
 		return hr;
 	}
 
 	hr = CoCreateInstance(CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, IID_IMMDeviceEnumerator, (void**)&pEnumerator);
 	if (FAILED(hr)) {
-		printf("Faild to CoCreateInstance\n");
+		std::cout << "Faild to CoCreateInstance\n";
 		return hr;
 	}
 
 	// get default output audio endpoint
 	hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &pDevice);
 	if (FAILED(hr)) {
-		printf("Faild to GetDefaultAudioEndpoint\n");
+		std::cout << "Faild to GetDefaultAudioEndpoint\n";
 		return hr;
 	}
 
 	// activates device
 	hr = pDevice->Activate(IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&pAudioClient);
 	if (FAILED(hr)) {
-		printf("Faild to Activate Decive\n");
+		std::cout << "Faild to Activate Decive\n";
 		return hr;
 	}
 
 	// gets audio format
 	hr = pAudioClient->GetMixFormat(&pwfx);
 	if (FAILED(hr)) {
-		printf("Faild to GetMixFormat\n");
+		std::cout << "Faild to GetMixFormat\n";
 		return hr;
 	}
 
+	wav_file = new WavWriter(pwfx);
+
 	hr = pAudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_LOOPBACK, hnsRequestedDuration, 0, pwfx, NULL);
 	if (FAILED(hr)) {
-		printf("Faild to Initialize Audio Client\n");
+		std::cout << "Faild to Initialize Audio Client\n";
 		return hr;
 	}
 
 	// Get the size of the allocated buffer.
 	hr = pAudioClient->GetBufferSize(&bufferFrameCount);
 	if (FAILED(hr)) {
-		printf("Faild to GetBufferSize\n");
+		std::cout << "Faild to GetBufferSize\n";
 		return hr;
 	}
 
 	hr = pAudioClient->GetService(IID_IAudioCaptureClient, (void**)&pCaptureClient);
 	if (FAILED(hr)) {
-		printf("Faild to GetService\n");
+		std::cout << "Faild to GetService\n";
 		return hr;
 	}
 
@@ -91,6 +95,8 @@ HRESULT AudioCapture::init() {
  *  purpose: create the thread to capture audio
  */
 HRESULT AudioCapture::start() {
+	wav_file->init(path);
+
 	hr = pAudioClient->Start();  // Start recording.
 	if (FAILED(hr)) {
 		printf("8");
@@ -109,6 +115,8 @@ HRESULT AudioCapture::stop() {
 	bDone = TRUE;
 	CloseHandle(thread);
 	
+	wav_file->close();
+
 	// Stop client.
 	hr = pAudioClient->Stop();  
 	if (FAILED(hr)) {
@@ -153,6 +161,8 @@ DWORD AudioCapture::recoderThread() {
 			/*
 			 * copy data here
 			 */
+			//printf(""+(int)numFramesAvailable);
+			for (int i=0; i < numFramesAvailable; ++i) wav_file->write(pData+i);
 
 			hr = pCaptureClient->ReleaseBuffer(numFramesAvailable);
 			if (FAILED(hr)) {
@@ -168,4 +178,8 @@ DWORD AudioCapture::recoderThread() {
 		}
 	}
 	return 0;
+}
+
+void AudioCapture::setPath(std::string path) {
+	this->path = path;
 }

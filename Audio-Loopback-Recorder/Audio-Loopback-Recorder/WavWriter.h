@@ -7,7 +7,7 @@
 
 class WavWriter {
 	public:
-		WavWriter(WAVEFORMATEX fm, int numSamples);
+		WavWriter(WAVEFORMATEX *fm);
 
 		void init(std::string path);
 		void write(BYTE * data);

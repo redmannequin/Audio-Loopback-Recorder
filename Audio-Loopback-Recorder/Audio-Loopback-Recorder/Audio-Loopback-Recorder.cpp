@@ -35,8 +35,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	
 	while (true) {
 		do {
-			system("cls");
-			std::cout << temp << std::endl;
+			//system("cls");
+			//std::cout << temp << std::endl;
 			std::cout << "Choose an option: " << std::endl;
 			std::cout << "(1) Enter output path" << std::endl;
 			std::cout << "(2) Exit" << std::endl;
@@ -47,15 +47,17 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		if (input == "2") return 0;
 
 		do {
-			system("cls");
-			std::cout << temp << std::endl;
+		//	system("cls");
+			//std::cout << temp << std::endl;
 			std::cout << "Enter path: ";
 			std::cin >> input;
 		} while (!checkPath(input));
 
+		capture.setPath(input);
+
 		do {
-			system("cls");
-			std::cout << temp << std::endl;
+			//system("cls");
+			//std::cout << temp << std::endl;
 			std::cout << "Choose an option: " << std::endl;
 			std::cout << "(1) Start Recording" << std::endl;
 			std::cout << "(2) Exit" << std::endl;
@@ -67,8 +69,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 		capture.start();
 		do {
-			system("cls");
-			std::cout << temp << std::endl;
+			//system("cls");
+			//std::cout << temp << std::endl;
 			std::cout << "Do you want to stop recording <y/n>: ";
 			std::cin >> input;
 		} while (input != "y");
