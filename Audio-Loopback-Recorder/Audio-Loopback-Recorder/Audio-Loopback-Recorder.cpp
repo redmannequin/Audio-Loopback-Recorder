@@ -5,7 +5,8 @@
 #include <string>
 #include <iostream>
 
-bool checkPath(std::string) {
+bool checkPath(std::string path) {
+	if (GetFileAttributesA(path.c_str()) == INVALID_FILE_ATTRIBUTES) return false;
 	return true;
 }
 

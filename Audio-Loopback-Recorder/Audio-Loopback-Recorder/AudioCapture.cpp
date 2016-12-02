@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "AudioCapture.h"
 
-
+/*  name: AudioCapture constructor 
+ *  purpose: set vars
+ */
 AudioCapture::AudioCapture() {
 	hnsRequestedDuration = REFTIMES_PER_SEC;
 	pEnumerator = NULL;
@@ -13,6 +15,9 @@ AudioCapture::AudioCapture() {
 	bDone = FALSE;
 }
 
+/*  name: AudioCapture destructor
+ *  purpose: clear memory
+ */
 AudioCapture::~AudioCapture() {
 	CoTaskMemFree(pwfx);
 	if (pEnumerator != NULL) pEnumerator->Release();
@@ -21,7 +26,9 @@ AudioCapture::~AudioCapture() {
 	if (pCaptureClient != NULL) pCaptureClient->Release();
 }
 
-
+/*  name: init 
+ *  purpose: initializes all the audio capture dependencies
+ */
 HRESULT AudioCapture::init() {
 	hr = CoInitialize(NULL);
 	if (FAILED(hr)) {
@@ -80,19 +87,24 @@ HRESULT AudioCapture::init() {
 	return S_OK;
 }
 
+/*  name: start
+ *  purpose: create the thread to capture audio
+ */
 HRESULT AudioCapture::start() {
 	hr = pAudioClient->Start();  // Start recording.
 	if (FAILED(hr)) {
 		printf("8");
 		return hr;
 	}
-
 	thread = CreateThread(NULL, 0, startThread, (void*) this, 0, &threadID);
 	return S_OK;
 }
 
+/*  name: stop
+ *  purpose: stop the capture of audio
+ *  Extra Info: sets bDone to true
+ */
 HRESULT AudioCapture::stop() {
-	
 	// stop reading
 	bDone = TRUE;
 	CloseHandle(thread);
@@ -107,11 +119,14 @@ HRESULT AudioCapture::stop() {
 	return S_OK;
 }
 
-
+/*  name: recorderThread
+ *  purpose: capture audio until stop is called 
+ *  Extra Info: is run on a separate thread from the main program. 
+ */
 DWORD AudioCapture::recoderThread() {
 	HRESULT hr;
 
-	// Each loop fills about half of the shared buffer.
+	// loopes untill bDone if true
 	while (bDone == FALSE) {
 		// Sleep for half the buffer duration.
 		Sleep(hnsActualDuration / REFTIMES_PER_MILLISEC / 2);
@@ -131,10 +146,9 @@ DWORD AudioCapture::recoderThread() {
 				return hr;
 			}
 
-			if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
+			/*if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
 				pData = NULL;  // Tell CopyData to write silence.
-			}
-
+			}*/
 
 			/*
 			 * copy data here
