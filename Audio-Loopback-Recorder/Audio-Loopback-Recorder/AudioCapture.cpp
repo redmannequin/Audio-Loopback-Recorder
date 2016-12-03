@@ -133,6 +133,7 @@ HRESULT AudioCapture::stop() {
  */
 DWORD AudioCapture::recoderThread() {
 	HRESULT hr;
+	hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
 	// loopes untill bDone if true
 	while (bDone == FALSE) {
@@ -145,7 +146,6 @@ DWORD AudioCapture::recoderThread() {
 			printf("Faild to get next data packet size\n");
 			return hr;
 		}
-
 		while (packetLength != 0) {
 			// Get the available data in the shared buffer.
 			hr = pCaptureClient->GetBuffer(&pData, &numFramesAvailable, &flags, NULL, NULL);
@@ -154,15 +154,7 @@ DWORD AudioCapture::recoderThread() {
 				return hr;
 			}
 
-			/*if (flags & AUDCLNT_BUFFERFLAGS_SILENT) {
-				pData = NULL;  // Tell CopyData to write silence.
-			}*/
-
-			/*
-			 * copy data here
-			 */
-			//printf(""+(int)numFramesAvailable);
-			for (int i=0; i < numFramesAvailable; ++i) wav_file->write(pData+i);
+			wav_file->write(pData, numFramesAvailable);
 
 			hr = pCaptureClient->ReleaseBuffer(numFramesAvailable);
 			if (FAILED(hr)) {
@@ -176,6 +168,7 @@ DWORD AudioCapture::recoderThread() {
 				return hr;
 			}
 		}
+		
 	}
 	return 0;
 }
