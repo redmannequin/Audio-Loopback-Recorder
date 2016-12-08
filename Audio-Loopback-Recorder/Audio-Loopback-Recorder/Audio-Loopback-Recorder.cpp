@@ -49,6 +49,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	}
 
 	capture->start();
+
 	do {
 		system("cls");
 		std::cout << temp << std::endl;
@@ -57,7 +58,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	} while (input != "y");
 
 	capture->stop();
-	delete capture;
 
 	system("cls");
 	std::cout << temp << std::endl;
@@ -72,6 +72,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		std::cin >> input;
 	} 
 
+	delete capture;
 	return 0;
 }
 
