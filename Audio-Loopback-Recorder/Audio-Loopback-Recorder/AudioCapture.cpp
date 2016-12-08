@@ -26,6 +26,7 @@ AudioCapture::~AudioCapture() {
 	if (pDevice != NULL) pDevice->Release();
 	if (pAudioClient != NULL) pAudioClient->Release();
 	if (pCaptureClient != NULL) pCaptureClient->Release();
+	CoUninitialize();
 }
 
 /*  name: init 

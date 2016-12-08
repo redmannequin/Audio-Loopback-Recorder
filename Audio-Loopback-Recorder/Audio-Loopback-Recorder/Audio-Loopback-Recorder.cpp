@@ -5,17 +5,18 @@
 #include <string>
 #include <iostream>
 
+
+
+
 bool checkPath(std::string path) {
 	if (GetFileAttributesA(path.c_str()) == INVALID_FILE_ATTRIBUTES) return false;
 	return true;
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
-	HRESULT hr;
-	AudioCapture capture;
-	hr = capture.init();
-	if (hr != S_OK) return 0;
 
+
+	AudioCapture * capture;
 	std::string input = "";
 	std::string temp = "";
 	temp += "                    _ _                 \n";
@@ -34,9 +35,11 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	temp += "----------------------------------------";
 	
 	while (true) {
+		capture = new AudioCapture;
+		capture->init();
 		do {
-			//system("cls");
-			//std::cout << temp << std::endl;
+			system("cls");
+			std::cout << temp << std::endl;
 			std::cout << "Choose an option: " << std::endl;
 			std::cout << "(1) Enter output path" << std::endl;
 			std::cout << "(2) Exit" << std::endl;
@@ -44,20 +47,29 @@ int _tmain(int argc, _TCHAR* argv[]) {
 			std::cin >> input;
 		} while (input != "1" && input != "2");
 
-		if (input == "2") return 0;
+		if (input == "2") {
+			delete capture;
+			return 0;
+		}
 
-		do {
-		//	system("cls");
-			//std::cout << temp << std::endl;
+		system("cls");
+		std::cout << temp << std::endl;
+		std::cout << "Enter path: ";
+		std::cin >> input;
+
+		while (!checkPath(input)) {
+			system("cls");
+			std::cout << temp << std::endl;
+			std::cout << "INVALID PATH ENTERED" << std::endl;
 			std::cout << "Enter path: ";
 			std::cin >> input;
-		} while (!checkPath(input));
+		} 
 
-		capture.setPath(input);
+		capture->setPath(input);
 
 		do {
-			//system("cls");
-			//std::cout << temp << std::endl;
+			system("cls");
+			std::cout << temp << std::endl;
 			std::cout << "Choose an option: " << std::endl;
 			std::cout << "(1) Start Recording" << std::endl;
 			std::cout << "(2) Exit" << std::endl;
@@ -65,17 +77,21 @@ int _tmain(int argc, _TCHAR* argv[]) {
 			std::cin >> input;
 		} while (input != "1" && input != "2");
 
-		if (input == "2") return 0;
+		if (input == "2") {
+			return 0;
+			delete capture;
+		}
 
-		capture.start();
+		capture->start();
 		do {
-			//system("cls");
-			//std::cout << temp << std::endl;
+			system("cls");
+			std::cout << temp << std::endl;
 			std::cout << "Do you want to stop recording <y/n>: ";
 			std::cin >> input;
 		} while (input != "y");
-		capture.stop();
 
+		capture->stop();
+		delete capture;
 	}
 	return 0;
 }
