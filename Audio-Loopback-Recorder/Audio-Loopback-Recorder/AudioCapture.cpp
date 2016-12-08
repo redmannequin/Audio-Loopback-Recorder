@@ -21,6 +21,7 @@ AudioCapture::AudioCapture() {
  *  purpose: clear memory
  */
 AudioCapture::~AudioCapture() {
+	delete wav_file;
 	CoTaskMemFree(pwfx);
 	if (pEnumerator != NULL) pEnumerator->Release();
 	if (pDevice != NULL) pDevice->Release();
@@ -96,7 +97,7 @@ HRESULT AudioCapture::init() {
  *  purpose: create the thread to capture audio
  */
 HRESULT AudioCapture::start() {
-	wav_file->init(path);
+	wav_file->init();
 
 	hr = pAudioClient->Start();  // Start recording.
 	if (FAILED(hr)) {
@@ -172,8 +173,4 @@ DWORD AudioCapture::recoderThread() {
 		
 	}
 	return 0;
-}
-
-void AudioCapture::setPath(std::string path) {
-	this->path = path;
 }

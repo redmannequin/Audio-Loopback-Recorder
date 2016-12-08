@@ -16,10 +16,11 @@ WavWriter::WavWriter(WAVEFORMATEX *fm) :
 }
 
 WavWriter::~WavWriter() {
+	delete fmt;
 }
 
 
-void WavWriter::init(std::string path) {
+void WavWriter::init() {
 	file.open("temp.wav", std::ofstream::binary);
 	BYTE header[44];
 	for (int i = 0; i < 44; ++i) header[i] = 0;

@@ -17,7 +17,6 @@ class AudioCapture{
 		HRESULT init();
 		HRESULT start();
 		HRESULT stop();
-		void setPath(std::string path);
 
 	private:
 		HRESULT hr;
@@ -35,7 +34,6 @@ class AudioCapture{
 		BYTE *pData;
 		DWORD flags;
 		WavWriter *wav_file;
-		std::string path;
 
 		const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
 		const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);

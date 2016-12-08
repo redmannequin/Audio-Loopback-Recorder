@@ -10,12 +10,13 @@ class WavWriter {
 		WavWriter(WAVEFORMATEX *fm);
 		~WavWriter();
 
-		void init(std::string path);
+		void init();
 		void write(BYTE * data, int length);
 		void close();
 
 	private:
 
+		// WAVE HEADER
 		unsigned char chunkID[4];
 		unsigned int chunkSize; // 36 + SubChunk2Size
 		unsigned char format[4];
