@@ -59,19 +59,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 	capture->stop();
 
-	system("cls");
-	std::cout << temp << std::endl;
-	std::cout << "Enter output path: ";
-	std::cin >> input;
-
-	while (!checkPath(input)) {
-		system("cls");
-		std::cout << temp << std::endl;
-		std::cout << "INVALID PATH ENTERED" << std::endl;
-		std::cout << "Enter path: ";
-		std::cin >> input;
-	} 
-
 	delete capture;
 	return 0;
 }
