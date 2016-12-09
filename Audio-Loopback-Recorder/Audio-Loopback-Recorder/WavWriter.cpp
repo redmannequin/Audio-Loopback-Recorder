@@ -2,7 +2,9 @@
 #include "WavWriter.h"
 #include <iostream>
 
-
+/*  name: WavWriter constructor
+*  purpose: set vars
+*/
 WavWriter::WavWriter(WAVEFORMATEX *fm) :
 	chunkID    {'R','I','F','F'},
 	format     {'W','A','V','E'},
@@ -15,11 +17,16 @@ WavWriter::WavWriter(WAVEFORMATEX *fm) :
 	memcpy(fmt, fm, subchunk1Size);
 }
 
+/*  name: WavWriter destructor
+*  purpose: clear memory
+*/
 WavWriter::~WavWriter() {
 	delete fmt;
 }
 
-
+/*  name: init
+*  purpose: create a .wav file and write temporary values to the header
+*/
 void WavWriter::init() {
 	file.open("temp.wav", std::ofstream::binary);
 	BYTE header[44];
@@ -27,11 +34,17 @@ void WavWriter::init() {
 	file.write((char*)header, 44);
 }
 
+/*  name: write
+*  purpose: write the audio data to the file
+*/
 void WavWriter::write(BYTE * data, int length) {
 	file.write((char*)data, length * blockAlign);
 	file.flush();
 }
 
+/*  name: close
+*  purpose: fill in the header information and close the file
+*/
 void WavWriter::close() {
 	int len = file.tellp();
 	subchunk2Size = len-(subchunk1Size+28);
